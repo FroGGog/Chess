@@ -18,7 +18,7 @@ public:
     MainWindow(const std::string title_, sf::Vector2u winSize);
 
     void Update();
-    void startRender();
+    void startRender(sf::Color bgColor_);
     void endRender();
 
     void Draw(sf::Drawable& drawbleItemd);

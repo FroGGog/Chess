@@ -31,6 +31,7 @@
 *.out
 *.app
 /.vs
+/out
 .vscode/
 /x64/Debug
 /build

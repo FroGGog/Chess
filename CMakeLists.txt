@@ -21,6 +21,9 @@ set(SOURCE_FILES
     "src/Game.cpp"
     "src/headers/Game.h"
 
+    "src/GameWorld.cpp"
+    "src/headers/GameWorld.h"
+
 )
 
 add_executable(Chess ${SOURCE_FILES})
@@ -29,6 +32,23 @@ target_compile_features(Chess PRIVATE cxx_std_17)
 
 # add precomplide headers
 target_precompile_headers(Chess PRIVATE src/stdafx.h)
+
+# add all files wich must be copyied in build dir
+set(COPY_FILES "${CMAKE_SOURCE_DIR}/src/img/ChessPiecesArray.png")
+
+# TODO : copy files in new folder in build files
+
+
+# COMAND TO COPY DIRECTORY
+#add_custom_target(copy_assets
+#    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/../assets ${CMAKE_CURRENT_BINARY_DIR}/assets
+#)
+
+# Copy font file to build dir
+add_custom_command(TARGET Chess POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${COPY_FILES} $<TARGET_FILE_DIR:Chess>
+    COMMENT "Copying files to output directory"
+)
 
 
 if(WIN32)

@@ -5,7 +5,7 @@
 
 int main(){
 
-    Game game{"Chess", sf::Vector2u{800, 600}};
+    Game game{"Chess", sf::Vector2u{900, 600}};
 
     while(game.getWindow()->isOpen()){
 

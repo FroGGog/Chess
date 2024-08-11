@@ -28,18 +28,7 @@ void MainWindow::Update(){
             break;
 
         case sf::Event::KeyPressed:
-            if(event.key.code == sf::Keyboard::Q){
-                Destroy();
-                setWinResol(sf::Vector2u{900, 600});
-                Create();
-                break;
-            }
-            else if(event.key.code == sf::Keyboard::W){
-                Destroy();
-                setWinResol(sf::Vector2u{500, 400});
-                Create();
-                break;
-            }
+            // maybe fullscrenn mode
             
             break;
 
@@ -52,9 +41,9 @@ void MainWindow::Update(){
 
 }
 
-void MainWindow::startRender(){
+void MainWindow::startRender(sf::Color bgColor_){
 
-    win.clear(sf::Color::Black);
+    win.clear(bgColor_);
 
 }
 

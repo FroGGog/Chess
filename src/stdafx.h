@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <deque>
 #include <string>
 
 //sfml
