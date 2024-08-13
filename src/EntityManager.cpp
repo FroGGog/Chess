@@ -73,6 +73,11 @@ FigureType Entity::getType() const
 	return type;
 }
 
+bool Entity::getClicked() const
+{
+	return isClicked;
+}
+
 void Entity::setClicked(bool switcher)
 {
 	isClicked = switcher;
@@ -202,6 +207,9 @@ EntityManager::EntityManager()
 
 	setupEntities();
 
+	choosedRect.setSize(sf::Vector2f{ 64.f, 64.f });
+	choosedRect.setFillColor(sf::Color{ 247,247,105, 150 });
+
 }
 
 void EntityManager::render(std::shared_ptr<MainWindow> win, std::shared_ptr<GameWorld> g_world)
@@ -211,9 +219,15 @@ void EntityManager::render(std::shared_ptr<MainWindow> win, std::shared_ptr<Game
 
 		iter->getSprite().setPosition(g_world->getGField()[iter->getPos().x][iter->getPos().y].getPosition());
 
+		if (iter->getClicked()) {
+			choosedRect.setPosition(iter->getSprite().getPosition());
+			win->Draw(choosedRect);
+		}
+		
 		win->Draw(iter->getSprite());
+		
 	}
-	printData = false;
+	
 
 }
 

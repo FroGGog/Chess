@@ -26,6 +26,9 @@ set(SOURCE_FILES
 
     "src/EntityManager.cpp"
     "src/headers/EntityManager.h"
+
+    "src/GameEngine.cpp"
+    "src/headers/GameEngine.h"
 )
 
 add_executable(Chess ${SOURCE_FILES})

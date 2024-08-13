@@ -1,8 +1,6 @@
 #pragma once
 
-#include "GameWorld.h"
-#include "EntityManager.h"
-
+#include "GameEngine.h"
 
 struct SharedContent{
 
@@ -10,6 +8,7 @@ struct SharedContent{
     //add other shared stuff here
     std::shared_ptr<GameWorld> gWorld;
     std::shared_ptr<EntityManager> e_manager;
+    std::shared_ptr<GameEngine> gameEngine;
 
 };
 

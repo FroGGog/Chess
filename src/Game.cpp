@@ -9,6 +9,7 @@ Game::Game(std::string title_, sf::Vector2u vidMode)
     content.window = std::make_shared<MainWindow>(title_, vidMode);
     content.gWorld = std::make_shared<GameWorld>(content.window->getWinSize());
     content.e_manager = std::make_shared<EntityManager>();
+    content.gameEngine = std::make_shared<GameEngine>(content.gWorld, content.e_manager);
 
 }
 
@@ -16,6 +17,7 @@ void Game::Update(){
 
     content.window->Update();
 
+    content.gameEngine->Update(content.window);
 }
 
 void Game::Render(){

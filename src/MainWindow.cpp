@@ -95,3 +95,8 @@ bool MainWindow::isOpen(){
     return isOpen_v;
 
 }
+
+sf::RenderWindow& MainWindow::getWindow()
+{
+    return win;
+}

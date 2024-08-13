@@ -28,5 +28,6 @@ public:
     sf::Vector2u getWinSize();
     void setWinResol(sf::Vector2u newResol_);
     bool isOpen();
+    sf::RenderWindow& getWindow();
 
 };

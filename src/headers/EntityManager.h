@@ -37,6 +37,7 @@ public:
 	sf::Sprite& getSprite();
 	sf::Vector2u getPos() const;
 	FigureType getType() const;
+	bool getClicked() const;
 	//setters
 	void setClicked(bool switcher);
 
@@ -49,6 +50,8 @@ private:
 	std::vector<Entity> allEntities;
 
 	sf::Texture allPiecesTexture;
+
+	sf::RectangleShape choosedRect;
 
 	bool printData;
 

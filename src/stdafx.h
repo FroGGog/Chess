@@ -2,6 +2,7 @@
 #include <vector>
 #include <deque>
 #include <string>
+#include <algorithm>
 
 //sfml
 #include <SFML/Graphics.hpp>
