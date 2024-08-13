@@ -8,8 +8,6 @@ GameWorld::GameWorld(sf::Vector2u winSize_){
     bgColor = sf::Color{40, 40, 40, 255};
     winSize = winSize_;
 
-    LoadTexture();
-
     CreateFieldTiles();
 
 }
@@ -17,7 +15,10 @@ GameWorld::GameWorld(sf::Vector2u winSize_){
 void GameWorld::render(std::shared_ptr<MainWindow> win){
 
     for (auto iter{ gameField.begin() }; iter < gameField.end(); iter++) {
-        win->Draw(*iter);
+        for (auto iter2{ iter->begin() }; iter2 < iter->end(); iter2++) {
+            win->Draw(*iter2);
+        }
+        
     }
 
 }
@@ -31,6 +32,11 @@ sf::Color GameWorld::getBGColor() const{
 
 }
 
+std::vector<std::vector<sf::RectangleShape>>& GameWorld::getGField()
+{
+    return gameField;
+}
+
 void GameWorld::CreateFieldTiles(){
 
     bool firstTile = true;
@@ -42,8 +48,10 @@ void GameWorld::CreateFieldTiles(){
     float x_margin = 64.f;
     float y_margin = 32.f;
 
-    for(unsigned row{0}; row < 8; row++){
+    std::vector<sf::RectangleShape> rowV;
 
+    for(unsigned row{0}; row < 8; row++){
+        rowV.clear();
         for(unsigned col{0}; col < 8; col++){
 
             sf::RectangleShape temp{ sf::Vector2f{64.f, 64.f} };
@@ -63,27 +71,15 @@ void GameWorld::CreateFieldTiles(){
                 
             }
             else {
-                temp.setPosition(sf::Vector2f{ gameField.front().getPosition().x + col * 64, pos_y});
+                temp.setPosition(sf::Vector2f{ x_margin + col * 64, pos_y});
             }
 
-            gameField.push_back(temp);
+            rowV.push_back(temp);
 
         }
+        gameField.push_back(rowV);
         black = !black;
-        pos_y = gameField.back().getPosition().y + 64.f;
+        pos_y = gameField[row].back().getPosition().y + 64.f;
     }
-
-}
-
-// TODO : maybe load texture in another class
-// private scope
-bool GameWorld::LoadTexture(){
-
-    //piece size 60x60
-    if(!allPiecesTexture.loadFromFile("ChessPiecesArray.png")){
-        std::cerr << "ERROR::LOADFROMFILE::CHESSARRAY.png\n";
-        return false;
-    }
-    return true;
 
 }
