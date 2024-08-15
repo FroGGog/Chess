@@ -71,9 +71,9 @@ sf::Sprite& Entity::getSprite()
 	return e_sprite;
 }
 
-sf::Vector2u Entity::getPos() const
+sf::Vector2i Entity::getPos() const
 {
-	return sf::Vector2u(pos.x, pos.y);
+	return sf::Vector2i(pos.x, pos.y);
 }
 
 FigureType Entity::getType() const
@@ -96,6 +96,11 @@ std::string Entity::getStringType() const
 	return stringType;
 }
 
+bool Entity::getFirstTurn() const
+{
+	return firstTurn;
+}
+
 void Entity::setClicked(bool switcher)
 {
 	isClicked = switcher;
@@ -105,6 +110,11 @@ void Entity::setPosition(unsigned x_, unsigned y_)
 {
 	pos.x = x_;
 	pos.y = y_;
+}
+
+void Entity::setFirstTurn()
+{
+	firstTurn = false;
 }
 
 

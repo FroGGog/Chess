@@ -22,6 +22,7 @@ private:
 
 	bool isClicked;
 	bool isWhite;
+	bool firstTurn;
 
 	posOnBoard pos;
 
@@ -36,14 +37,16 @@ public:
 
 	//gettes
 	sf::Sprite& getSprite();
-	sf::Vector2u getPos() const;
+	sf::Vector2i getPos() const;
 	FigureType getType() const;
 	bool getClicked() const;
 	bool getColor() const;
 	std::string getStringType() const;
+	bool getFirstTurn() const;
 	//setters
 	void setClicked(bool switcher);
 	void setPosition(unsigned x_, unsigned y_);
+	void setFirstTurn();
 
 };
 

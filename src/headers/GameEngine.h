@@ -42,6 +42,10 @@ private:
 
 	void calcPossMoves();
 	void pawnMoves();
+	void rookMoves();
+
+	void checkHorizontal();
+	void checkVertical();
 
 
 public: 

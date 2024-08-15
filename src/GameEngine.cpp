@@ -11,14 +11,14 @@ GameEngine::GameEngine(std::shared_ptr<GameWorld> gWorld_, std::shared_ptr<Entit
 	mouseCollider.setFillColor(sf::Color::Red);
 
 	convertedGField = {
-		{" ", " ", " ", " ", " ", " ", " ", " "},
-		{" ", " ", " ", " ", " ", " ", " ", " "},
-		{" ", " ", " ", " ", " ", " ", " ", " "},
-		{" ", " ", " ", " ", " ", " ", " ", " "},
-		{" ", " ", " ", " ", " ", " ", " ", " "},
-		{" ", " ", " ", " ", " ", " ", " ", " "},
-		{" ", " ", " ", " ", " ", " ", " ", " "},
-		{" ", " ", " ", " ", " ", " ", " ", " "},
+		{"   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "},
+		{"   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "},
+		{"   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "},
+		{"   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "},
+		{"   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "},
+		{"   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "},
+		{"   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "},
+		{"   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "},
 	};
 
 	convertChessBoard();
@@ -84,15 +84,19 @@ void GameEngine::checkMovePiece()
 		return;
 	}
 
-	// TODO : change way how piece change position
 	//check if player clicked on tile and want's to move piece
 	for (auto iter{ possibleMoves.begin() }; iter < possibleMoves.end(); iter++) {
 		if (mouseCollider.getGlobalBounds().intersects(iter->onTile.getGlobalBounds())) {
-			std::cout << iter->onTile.getPosition().x / 64 - 1 << " " << iter->onTile.getPosition().y / 32 - 1;
-			choosedPiece->setPosition(iter->onTile.getPosition().x / 64 - 1, iter->onTile.getPosition().y / 32 - 1);
+			// minus offset of board divided by cell size
+			convertedGField[choosedPiece->getPos().x][choosedPiece->getPos().y] = "   ";
+			choosedPiece->setPosition((iter->onTile.getPosition().y - 32) / 64, (iter->onTile.getPosition().x - 64) / 64);
+			choosedPiece->setFirstTurn();
 			choosedPiece->setClicked(false);
 			choosedPiece = nullptr;
 			possibleMoves.clear();
+
+			convertChessBoard();
+
 			break;
 		}
 	}
@@ -108,9 +112,10 @@ void GameEngine::convertChessBoard()
 
 	}
 
+	std::cout << '\n';
 	for (auto& i : convertedGField) {
 		for (auto& j : i) {
-			std::cout << j << ' ';
+			std::cout << j;
 		}
 		std::cout << "\n";
 	}
@@ -129,6 +134,7 @@ void GameEngine::calcPossMoves()
 	case FigureType::BISHOP:
 		break;
 	case FigureType::ROOK:
+		rookMoves();
 		break;
 	case FigureType::QUEEN:
 		break;
@@ -141,29 +147,163 @@ void GameEngine::calcPossMoves()
 
 }
 
+// TODO : work on PossibleMove it's shit to implement them every time like that
+
 void GameEngine::pawnMoves()
 {
 	sf::Vector2f pos;
 	sf::Vector2f size;
 
-	if (choosedPiece->getColor()) {
-		for (unsigned i{ 1 }; i <= 2; i++) {
-			if (convertedGField[choosedPiece->getPos().x - i][choosedPiece->getPos().y] == " ") {
-				// get these to center circles
-				pos = gWorld->getGField()[choosedPiece->getPos().x - i][choosedPiece->getPos().y].getPosition();
-				size = gWorld->getGField()[choosedPiece->getPos().x - i][choosedPiece->getPos().y].getLocalBounds().getSize();
+	// if white pawn convert to oposite dir
+	int converter = choosedPiece->getColor() ? -1 : 1;
+	int maxMove = choosedPiece->getFirstTurn() ? 2 : 1;
+
+	for (int i{ 1 }; i <= maxMove; i++) {
+		if (convertedGField[choosedPiece->getPos().x + i * converter][choosedPiece->getPos().y] == "   ") {
+			// get these to center circles
+			pos = gWorld->getGField()[choosedPiece->getPos().x + i * converter][choosedPiece->getPos().y].getPosition();
+			size = gWorld->getGField()[choosedPiece->getPos().x + i * converter][choosedPiece->getPos().y].getLocalBounds().getSize();
 				
-				// possible move has link to tile on which it is
-				PossibleMove temp{gWorld->getGField()[choosedPiece->getPos().x - i][choosedPiece->getPos().y] };
-				temp.setPosition(sf::Vector2f{pos.x + size.x / 2, pos.y + size.y / 2});
-				possibleMoves.push_back(temp);
-			}
+			// possible move has link to tile on which it is
+			PossibleMove temp{ gWorld->getGField()[choosedPiece->getPos().x + i * converter][choosedPiece->getPos().y] };
+				
+			temp.setPosition(sf::Vector2f{pos.x + size.x / 2, pos.y + size.y / 2});
+			possibleMoves.push_back(temp);
+		}
+		else {
+			break;
 		}
 	}
 
 
 }
 
+void GameEngine::rookMoves()
+{
+	checkHorizontal();
+	checkVertical();
+
+}
+
+void GameEngine::checkHorizontal()
+{
+	sf::Vector2f pos;
+	sf::Vector2f size;
+
+	//check right side
+	for (int i{ 1 }; i < 8; i++) {
+		if (choosedPiece->getPos().y + i > 7) {
+			break;
+		}
+		else if (choosedPiece->getPos().y == 7) {
+			break;
+		}
+
+		if (convertedGField[choosedPiece->getPos().x][choosedPiece->getPos().y + i] == "   ") {
+
+			// get these to center circles
+			pos = gWorld->getGField()[choosedPiece->getPos().x][choosedPiece->getPos().y + i].getPosition();
+			size = gWorld->getGField()[choosedPiece->getPos().x][choosedPiece->getPos().y + i].getLocalBounds().getSize();
+
+			// possible move has link to tile on which it is
+			PossibleMove temp{ gWorld->getGField()[choosedPiece->getPos().x][choosedPiece->getPos().y + i] };
+
+			temp.setPosition(sf::Vector2f{ pos.x + size.x / 2, pos.y + size.y / 2 });
+			possibleMoves.push_back(temp);
+
+		}
+		else {
+			break;
+		}
+	}
+
+	for (int i{ 1 }; i < 8; i++) {
+		std::cout << choosedPiece->getPos().y - i << '\n';
+		if (choosedPiece->getPos().y - i < 0) {
+			break;
+		}
+		else if (choosedPiece->getPos().y == 0) {
+			break;
+		}
+
+		if (convertedGField[choosedPiece->getPos().x][choosedPiece->getPos().y - i] == "   ") {
+			// get these to center circles
+			pos = gWorld->getGField()[choosedPiece->getPos().x][choosedPiece->getPos().y - i].getPosition();
+			size = gWorld->getGField()[choosedPiece->getPos().x][choosedPiece->getPos().y - i].getLocalBounds().getSize();
+
+			// possible move has link to tile on which it is
+			PossibleMove temp{ gWorld->getGField()[choosedPiece->getPos().x][choosedPiece->getPos().y - i] };
+
+			temp.setPosition(sf::Vector2f{ pos.x + size.x / 2, pos.y + size.y / 2 });
+			possibleMoves.push_back(temp);
+
+		}
+		else {
+			break;
+		}
+	}
+
+}
+
+void GameEngine::checkVertical()
+{
+	sf::Vector2f pos;
+	sf::Vector2f size;
+
+	//check right side
+	for (int i{ 1 }; i < 8; i++) {
+		if (choosedPiece->getPos().x + i > 7) {
+			break;
+		}
+		else if (choosedPiece->getPos().x == 7) {
+			break;
+		}
+
+		if (convertedGField[choosedPiece->getPos().x + i][choosedPiece->getPos().y] == "   ") {
+
+			// get these to center circles
+			pos = gWorld->getGField()[choosedPiece->getPos().x + i][choosedPiece->getPos().y].getPosition();
+			size = gWorld->getGField()[choosedPiece->getPos().x + i][choosedPiece->getPos().y].getLocalBounds().getSize();
+
+			// possible move has link to tile on which it is
+			PossibleMove temp{ gWorld->getGField()[choosedPiece->getPos().x + i][choosedPiece->getPos().y] };
+
+			temp.setPosition(sf::Vector2f{ pos.x + size.x / 2, pos.y + size.y / 2 });
+			possibleMoves.push_back(temp);
+
+		}
+		else {
+			break;
+		}
+	}
+
+	for (int i{ 1 }; i < 8; i++) {
+		if (choosedPiece->getPos().x - i < 0) {
+			break;
+		}
+		else if (choosedPiece->getPos().x == 0) {
+			break;
+		}
+
+		std::cout << choosedPiece->getPos().x - i << ' ' << choosedPiece->getPos().y << ' ';
+		if (convertedGField[choosedPiece->getPos().x - i][choosedPiece->getPos().y] == "   ") {
+			// get these to center circles
+			pos = gWorld->getGField()[choosedPiece->getPos().x - i][choosedPiece->getPos().y].getPosition();
+			size = gWorld->getGField()[choosedPiece->getPos().x - i][choosedPiece->getPos().y].getLocalBounds().getSize();
+
+			// possible move has link to tile on which it is
+			PossibleMove temp{ gWorld->getGField()[choosedPiece->getPos().x - i][choosedPiece->getPos().y] };
+
+			temp.setPosition(sf::Vector2f{ pos.x + size.x / 2, pos.y + size.y / 2 });
+			possibleMoves.push_back(temp);
+
+		}
+		else {
+			break;
+		}
+	}
+
+}
 
 
 // Possible move stuff here
