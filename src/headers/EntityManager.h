@@ -26,6 +26,7 @@ private:
 	posOnBoard pos;
 
 	FigureType type;
+	std::string stringType;
 
 	void setupSprite();
 
@@ -38,8 +39,11 @@ public:
 	sf::Vector2u getPos() const;
 	FigureType getType() const;
 	bool getClicked() const;
+	bool getColor() const;
+	std::string getStringType() const;
 	//setters
 	void setClicked(bool switcher);
+	void setPosition(unsigned x_, unsigned y_);
 
 };
 

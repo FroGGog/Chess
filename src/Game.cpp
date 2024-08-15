@@ -27,6 +27,7 @@ void Game::Render(){
     //draw all stuff here
     content.gWorld->render(content.window);
     content.e_manager->render(content.window, content.gWorld);
+    content.gameEngine->render(content.window);
 
     content.window->endRender();
 

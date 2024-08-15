@@ -11,21 +11,27 @@ void Entity::setupSprite()
 	switch (type)
 	{
 	case FigureType::PAWN:
+		stringType = "PN";
 		fig_id = 5;
 		break;
 	case FigureType::KNIGHT:
+		stringType = "KT";
 		fig_id = 3;
 		break;
 	case FigureType::BISHOP:
+		stringType = "BP";
 		fig_id = 4;
 		break;
 	case FigureType::ROOK:
+		stringType = "RK";
 		fig_id = 2;
 		break;
 	case FigureType::QUEEN:
+		stringType = "QN";
 		fig_id = 0;
 		break;
 	case FigureType::KING:
+		stringType = "KG";
 		fig_id = 1;
 		break;
 	default:
@@ -34,9 +40,11 @@ void Entity::setupSprite()
 
 	if (isWhite) {
 		e_sprite.setTextureRect(sf::IntRect{ 60 * fig_id, 60 , 60, 60 });
+		stringType += "W";
 	}
 	else {
 		e_sprite.setTextureRect(sf::IntRect{ 60 * fig_id, 0, 60, 60 });
+		stringType += "B";
 	}
 	
 
@@ -78,9 +86,25 @@ bool Entity::getClicked() const
 	return isClicked;
 }
 
+bool Entity::getColor() const
+{
+	return isWhite;
+}
+
+std::string Entity::getStringType() const
+{
+	return stringType;
+}
+
 void Entity::setClicked(bool switcher)
 {
 	isClicked = switcher;
+}
+
+void Entity::setPosition(unsigned x_, unsigned y_)
+{
+	pos.x = x_;
+	pos.y = y_;
 }
 
 
