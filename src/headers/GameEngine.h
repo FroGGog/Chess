@@ -43,9 +43,12 @@ private:
 	void calcPossMoves();
 	void pawnMoves();
 	void rookMoves();
+	void bishopMoves();
+	void queenMoves();
 
 	void checkHorizontal();
 	void checkVertical();
+	void checkDiagonals();
 
 
 public: 

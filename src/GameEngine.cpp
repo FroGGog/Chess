@@ -132,11 +132,13 @@ void GameEngine::calcPossMoves()
 	case FigureType::KNIGHT:
 		break;
 	case FigureType::BISHOP:
+		bishopMoves();
 		break;
 	case FigureType::ROOK:
 		rookMoves();
 		break;
 	case FigureType::QUEEN:
+		queenMoves();
 		break;
 	case FigureType::KING:
 		break;
@@ -183,6 +185,18 @@ void GameEngine::rookMoves()
 	checkHorizontal();
 	checkVertical();
 
+}
+
+void GameEngine::bishopMoves()
+{
+	checkDiagonals();
+}
+
+void GameEngine::queenMoves()
+{
+	checkHorizontal();
+	checkVertical();
+	checkDiagonals();
 }
 
 void GameEngine::checkHorizontal()
@@ -302,6 +316,88 @@ void GameEngine::checkVertical()
 			break;
 		}
 	}
+
+}
+
+void GameEngine::checkDiagonals()
+{
+	sf::Vector2f pos;
+	sf::Vector2f size;
+
+	int minus = 1;
+
+	//check up and down
+	for (int repeat{ 1 }; repeat <= 4; repeat++) {
+
+		for (int i{ 1 }; i < 8; i++) {
+
+			//if piece on left side of board
+			if (choosedPiece->getPos().x == 0) {
+				break;
+			}
+
+			if (choosedPiece->getPos().x - i < 0) {
+				break;
+			}
+			//check if piece is on top
+			if (choosedPiece->getPos().y - (i * minus) < 0 || choosedPiece->getPos().y - (i * minus) > 7) {
+				break;
+			}
+
+			if (convertedGField[choosedPiece->getPos().x - i][choosedPiece->getPos().y - (i * minus)] == "   ") {
+
+				pos = gWorld->getGField()[choosedPiece->getPos().x - i][choosedPiece->getPos().y - (i * minus)].getPosition();
+				size = gWorld->getGField()[choosedPiece->getPos().x - i][choosedPiece->getPos().y - (i * minus)].getLocalBounds().getSize();
+
+				PossibleMove temp{ gWorld->getGField()[choosedPiece->getPos().x - i][choosedPiece->getPos().y - (i * minus)] };
+
+				temp.setPosition(sf::Vector2f{ pos.x + size.x / 2, pos.y + size.y / 2 });
+				possibleMoves.push_back(temp);
+			}
+			else {
+				break;
+			}
+		}
+		minus = -minus;
+
+	}
+
+	//check down
+	for (int repeat{ 1 }; repeat <= 2; repeat++) {
+		for (int i{ 1 }; i < 8; i++) {
+
+			//if piece on left side of board
+			if (choosedPiece->getPos().x == 7) {
+				break;
+			}
+
+			if (choosedPiece->getPos().x + i > 7) {
+				break;
+			}
+			//check if piece is on top
+			if (choosedPiece->getPos().y - (i * minus) < 0 || choosedPiece->getPos().y - (i * minus) > 7) {
+				break;
+			}
+
+			if (convertedGField[choosedPiece->getPos().x + i][choosedPiece->getPos().y - (i * minus)] == "   ") {
+
+				pos = gWorld->getGField()[choosedPiece->getPos().x + i][choosedPiece->getPos().y - (i * minus)].getPosition();
+				size = gWorld->getGField()[choosedPiece->getPos().x + i][choosedPiece->getPos().y - (i * minus)].getLocalBounds().getSize();
+
+				PossibleMove temp{ gWorld->getGField()[choosedPiece->getPos().x + i][choosedPiece->getPos().y - (i * minus)] };
+
+				temp.setPosition(sf::Vector2f{ pos.x + size.x / 2, pos.y + size.y / 2 });
+				possibleMoves.push_back(temp);
+			}
+			else {
+				break;
+			}
+		}
+		minus = -minus;
+
+	}
+
+
 
 }
 
