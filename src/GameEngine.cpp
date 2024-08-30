@@ -142,7 +142,7 @@ void GameEngine::calcPossMoves()
 		queenMoves();
 		break;
 	case FigureType::KING:
-		
+		kingMoves();
 		break;
 	default:
 		break;
@@ -204,6 +204,11 @@ void GameEngine::queenMoves()
 void GameEngine::knightMoves()
 {
 	checkKnight();
+}
+
+void GameEngine::kingMoves()
+{
+	checkKing();
 }
 
 void GameEngine::checkHorizontal()
@@ -513,6 +518,40 @@ void GameEngine::checkKnight()
 
 	}
 
+
+}
+
+void GameEngine::checkKing()
+{
+	sf::Vector2f pos;
+	sf::Vector2f size;
+
+	for (int x{ -1 }; x <= 1; x++) {
+		for (int y{ -1 }; y <= 1; y++) {
+			
+			if (choosedPiece->getPos().x + x < 0 || choosedPiece->getPos().x + x > 7) {
+				break;
+			}
+
+			if (choosedPiece->getPos().y + y < 0 || choosedPiece->getPos().y + y > 7) {
+				break;
+			}
+
+			if (convertedGField[choosedPiece->getPos().x + x][choosedPiece->getPos().y + y] == "   ") {
+
+				pos = gWorld->getGField()[choosedPiece->getPos().x + x][choosedPiece->getPos().y + y].getPosition();
+				size = gWorld->getGField()[choosedPiece->getPos().x + x][choosedPiece->getPos().y + y].getLocalBounds().getSize();
+
+				PossibleMove temp{ gWorld->getGField()[choosedPiece->getPos().x + x][choosedPiece->getPos().y + y] };
+
+				temp.setPosition(sf::Vector2f{ pos.x + size.x / 2, pos.y + size.y / 2 });
+				possibleMoves.push_back(temp);
+			}
+			else {
+				
+			}
+		}
+	}
 
 }
 

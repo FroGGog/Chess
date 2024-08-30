@@ -46,11 +46,13 @@ private:
 	void bishopMoves();
 	void queenMoves();
 	void knightMoves();
+	void kingMoves();
 
 	void checkHorizontal();
 	void checkVertical();
 	void checkDiagonals();
 	void checkKnight();
+	void checkKing();
 
 
 public: 
