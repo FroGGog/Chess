@@ -40,6 +40,9 @@ private:
 	//convert gWolrd gameField vector into vector<vector<std::string>>
 	void convertChessBoard();
 
+	void addPossibleMove(int x, int y);
+	bool checkPossibleMove(int x, int y);
+
 	void calcPossMoves();
 	void pawnMoves();
 	void rookMoves();

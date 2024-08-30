@@ -19,7 +19,7 @@ void Entity::setupSprite()
 		fig_id = 3;
 		break;
 	case FigureType::BISHOP:
-		stringType = "BP";
+		stringType = "SP";
 		fig_id = 4;
 		break;
 	case FigureType::ROOK:
