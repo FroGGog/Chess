@@ -130,6 +130,7 @@ void GameEngine::calcPossMoves()
 		pawnMoves();
 		break;
 	case FigureType::KNIGHT:
+		knightMoves();
 		break;
 	case FigureType::BISHOP:
 		bishopMoves();
@@ -141,6 +142,7 @@ void GameEngine::calcPossMoves()
 		queenMoves();
 		break;
 	case FigureType::KING:
+		
 		break;
 	default:
 		break;
@@ -197,6 +199,11 @@ void GameEngine::queenMoves()
 	checkHorizontal();
 	checkVertical();
 	checkDiagonals();
+}
+
+void GameEngine::knightMoves()
+{
+	checkKnight();
 }
 
 void GameEngine::checkHorizontal()
@@ -389,6 +396,8 @@ void GameEngine::checkDiagonals()
 				temp.setPosition(sf::Vector2f{ pos.x + size.x / 2, pos.y + size.y / 2 });
 				possibleMoves.push_back(temp);
 			}
+			// check if enemy piece is there
+			// if enemy piece is king - check
 			else {
 				break;
 			}
@@ -397,6 +406,112 @@ void GameEngine::checkDiagonals()
 
 	}
 
+
+
+}
+
+void GameEngine::checkKnight()
+{
+	sf::Vector2f pos;
+	sf::Vector2f size;
+
+	int minus = 1;
+
+	int upDown = 2;
+	int leftRight = 1;
+
+	//check up
+	for (int i{ 4 }; i >= 1; i--) {
+
+
+		//go down by one square
+		if (i == 2) {
+			upDown--;
+			leftRight++;
+		}
+
+		//check if some moves out of board
+		if (choosedPiece->getPos().y + leftRight * minus < 0) {
+			minus = -minus;
+			continue;
+		}
+		if (choosedPiece->getPos().y + leftRight * minus > 7) {
+			minus = -minus;
+			continue;
+		}
+
+		if (choosedPiece->getPos().x - upDown < 0) {
+			break;
+		}
+
+ 		if (convertedGField[choosedPiece->getPos().x - upDown][choosedPiece->getPos().y + (leftRight * minus)] == "   ") {
+
+			pos = gWorld->getGField()[choosedPiece->getPos().x - upDown][choosedPiece->getPos().y + (leftRight * minus)].getPosition();
+			size = gWorld->getGField()[choosedPiece->getPos().x - upDown][choosedPiece->getPos().y + (leftRight * minus)].getLocalBounds().getSize();
+
+			PossibleMove temp{ gWorld->getGField()[choosedPiece->getPos().x - upDown][choosedPiece->getPos().y + (leftRight * minus)] };
+
+			temp.setPosition(sf::Vector2f{ pos.x + size.x / 2, pos.y + size.y / 2 });
+			possibleMoves.push_back(temp);
+
+			minus = -minus;
+		}
+		//check if king attacked
+		else {
+			minus = -minus;
+		}
+		
+
+	}
+
+	upDown = 2;
+	leftRight = 1;
+
+	//check down
+	for (int i{ 4 }; i >= 1; i--) {
+
+
+		//go down by one square
+		if (i == 2) {
+			upDown--;
+			leftRight++;
+		}
+
+		//check if some moves out of board
+		if (choosedPiece->getPos().y + leftRight * minus < 0) {
+			minus = -minus;
+			continue;
+		}
+		if (choosedPiece->getPos().y + leftRight * minus > 7) {
+			minus = -minus;
+			continue;
+		}
+
+		if (choosedPiece->getPos().x + upDown > 7) {
+			break;
+		}
+
+		std::cout << choosedPiece->getPos().x + upDown << " " << choosedPiece->getPos().y + (leftRight * minus) << '\n';
+
+		if (convertedGField[choosedPiece->getPos().x + upDown][choosedPiece->getPos().y + (leftRight * minus)] == "   ") {
+
+			pos = gWorld->getGField()[choosedPiece->getPos().x + upDown][choosedPiece->getPos().y + (leftRight * minus)].getPosition();
+			size = gWorld->getGField()[choosedPiece->getPos().x + upDown][choosedPiece->getPos().y + (leftRight * minus)].getLocalBounds().getSize();
+
+			PossibleMove temp{ gWorld->getGField()[choosedPiece->getPos().x + upDown][choosedPiece->getPos().y + (leftRight * minus)] };
+
+			temp.setPosition(sf::Vector2f{ pos.x + size.x / 2, pos.y + size.y / 2 });
+			possibleMoves.push_back(temp);
+
+			minus = -minus;
+		}
+		//check if king attacked
+		else {
+			minus = -minus;
+		}
+
+
+	}
 
 
 }

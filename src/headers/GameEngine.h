@@ -45,10 +45,12 @@ private:
 	void rookMoves();
 	void bishopMoves();
 	void queenMoves();
+	void knightMoves();
 
 	void checkHorizontal();
 	void checkVertical();
 	void checkDiagonals();
+	void checkKnight();
 
 
 public: 
