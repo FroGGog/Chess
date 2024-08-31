@@ -33,9 +33,13 @@ private:
 
 	sf::RectangleShape mouseCollider;
 
+	bool whiteMove;
+
 	void updateMouseBox(std::shared_ptr<MainWindow> win);
 	void checkChoosedPiece();
 	void checkMovePiece();
+
+	void checkCapture();
 
 	//convert gWolrd gameField vector into vector<vector<std::string>>
 	void convertChessBoard();

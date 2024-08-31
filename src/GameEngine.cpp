@@ -10,6 +10,8 @@ GameEngine::GameEngine(std::shared_ptr<GameWorld> gWorld_, std::shared_ptr<Entit
 	mouseCollider.setSize(sf::Vector2f{ 1.f,1.f });
 	mouseCollider.setFillColor(sf::Color::Red);
 
+	whiteMove = true;
+
 	convertedGField = {
 		{"   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "},
 		{"   ", "   ", "   ", "   ", "   ", "   ", "   ", "   "},
@@ -67,10 +69,13 @@ void GameEngine::checkChoosedPiece()
 
 	for (auto iter{ e_manager->getEntities().begin() }; iter < e_manager->getEntities().end(); iter++) {
 		if (mouseCollider.getGlobalBounds().intersects(iter->getSprite().getGlobalBounds())) {
-			iter->setClicked(true);
-			choosedPiece = &(*iter);
-			calcPossMoves();
-			break;
+			if (iter->getColor() == whiteMove) {
+				iter->setClicked(true);
+				choosedPiece = &(*iter);
+				calcPossMoves();
+				break;
+			}
+			
 		}
 		
 	}
@@ -90,6 +95,9 @@ void GameEngine::checkMovePiece()
 			// minus offset of board divided by cell size
 			convertedGField[choosedPiece->getPos().x][choosedPiece->getPos().y] = "   ";
 			choosedPiece->setPosition((iter->onTile.getPosition().y - 32) / 64, (iter->onTile.getPosition().x - 64) / 64);
+
+			checkCapture();
+
 			choosedPiece->setFirstTurn();
 			choosedPiece->setClicked(false);
 			choosedPiece = nullptr;
@@ -97,9 +105,30 @@ void GameEngine::checkMovePiece()
 
 			convertChessBoard();
 
+			whiteMove = !whiteMove;
+
 			break;
 		}
 	}
+
+}
+
+//check if player piece is set on enemy piece
+void GameEngine::checkCapture()
+{
+	for (auto iter{ e_manager->getEntities().begin() }; iter < e_manager->getEntities().end(); iter++) {
+
+		if (choosedPiece->getSprite().getGlobalBounds().intersects(iter->getSprite().getGlobalBounds())) {
+			if (choosedPiece->getColor() != iter->getColor()) {
+				convertedGField[choosedPiece->getPos().x][choosedPiece->getPos().y] = choosedPiece->getStringType();
+				e_manager->getEntities().erase(iter);
+				break;
+			}
+		}
+
+
+	}
+
 
 }
 
