@@ -443,14 +443,22 @@ void GameEngine::checkKnight()
 	//check up
 	for (int i{ 4 }; i >= 1; i--) {
 
-		if (choosedPiece->getPos().x == 0) {
-			break;
-		}
-
 		//go down by one square
 		if (i == 2) {
 			upDown--;
 			leftRight++;
+		}
+
+
+		//if piece is on top not need to check upper
+		if (choosedPiece->getPos().x == 0) {
+			break;
+		}
+
+		if (choosedPiece->getPos().x - upDown < 0) {
+			std::cout << i << '\n';
+			minus = -minus;
+			continue;
 		}
 
 		//check if some moves out of board
@@ -473,10 +481,11 @@ void GameEngine::checkKnight()
 		else {
 
 			if (checkPossibleMove(choosedPiece->getPos().x - upDown, choosedPiece->getPos().y + (leftRight * minus))) {
-				break;
+				minus = -minus;
+				continue;
 			}
-
 			minus = -minus;
+			
 		}
 		
 
@@ -488,15 +497,22 @@ void GameEngine::checkKnight()
 	//check down
 	for (int i{ 4 }; i >= 1; i--) {
 
-		if (choosedPiece->getPos().x == 7) {
-			break;
-		}
-
 		//go down by one square
 		if (i == 2) {
 			upDown--;
 			leftRight++;
 		}
+
+		// if piece is on bottom no need to check more
+		if (choosedPiece->getPos().x == 7) {
+			break;
+		}
+
+		if (choosedPiece->getPos().x + upDown > 7) {
+			minus = -minus;
+			continue;
+		}
+		
 
 		//check if some moves out of board
 		if (choosedPiece->getPos().y + leftRight * minus < 0) {
@@ -519,7 +535,8 @@ void GameEngine::checkKnight()
 		else {
 			
 			if (checkPossibleMove(choosedPiece->getPos().x + upDown, choosedPiece->getPos().y + (leftRight * minus))) {
-				break;
+				minus = -minus;
+				continue;
 			}
 			minus = -minus;
 		}
