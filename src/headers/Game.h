@@ -10,6 +10,7 @@ struct SharedContent{
     std::shared_ptr<EntityManager> e_manager;
     std::shared_ptr<GameEngine> gameEngine;
 
+    // TODO : UIClass { create timers, create beaten pieces, and maybe turns }
 };
 
 class Game{

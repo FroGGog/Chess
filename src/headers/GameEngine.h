@@ -40,6 +40,7 @@ private:
 	void checkMovePiece();
 
 	void checkCapture();
+	void checkPawnCapture();
 
 	//convert gWolrd gameField vector into vector<vector<std::string>>
 	void convertChessBoard();

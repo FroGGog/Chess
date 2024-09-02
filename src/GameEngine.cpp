@@ -118,7 +118,7 @@ void GameEngine::checkCapture()
 {
 	for (auto iter{ e_manager->getEntities().begin() }; iter < e_manager->getEntities().end(); iter++) {
 
-		if (choosedPiece->getSprite().getGlobalBounds().intersects(iter->getSprite().getGlobalBounds())) {
+		if (choosedPiece->getPos().x == iter->getPos().x && choosedPiece->getPos().y == iter->getPos().y) {
 			if (choosedPiece->getColor() != iter->getColor()) {
 				convertedGField[choosedPiece->getPos().x][choosedPiece->getPos().y] = choosedPiece->getStringType();
 				e_manager->getEntities().erase(iter);
@@ -132,6 +132,14 @@ void GameEngine::checkCapture()
 
 }
 
+void GameEngine::checkPawnCapture()
+{
+
+
+
+
+}
+
 void GameEngine::convertChessBoard()
 {
 
@@ -141,13 +149,13 @@ void GameEngine::convertChessBoard()
 
 	}
 
-	std::cout << '\n';
+	/*std::cout << '\n';
 	for (auto& i : convertedGField) {
 		for (auto& j : i) {
 			std::cout << j;
 		}
 		std::cout << "\n";
-	}
+	}*/
 
 }
 
@@ -231,7 +239,7 @@ void GameEngine::calcPossMoves()
 
 void GameEngine::pawnMoves()
 {
-
+	// Edit this, so player can player both as black or white
 
 	// if white pawn convert to oposite dir
 	int converter = choosedPiece->getColor() ? -1 : 1;
@@ -242,15 +250,16 @@ void GameEngine::pawnMoves()
 		
 			addPossibleMove(choosedPiece->getPos().x + i * converter, choosedPiece->getPos().y);
 		}
-		else {
-			
-			//make special for pawn
-			/*if (checkPossibleMove(choosedPiece->getPos().x + i * converter, choosedPiece->getPos().y)) {
-				break;
-			}*/
-		}
 	}
 
+	// check attack for pawn, refactor later maybe
+	if (convertedGField[choosedPiece->getPos().x + (1 * converter)][choosedPiece->getPos().y - 1] != "   ") {
+		checkPossibleMove(choosedPiece->getPos().x + (1 * converter), choosedPiece->getPos().y - 1);
+	}
+
+	if (convertedGField[choosedPiece->getPos().x + (1 * converter)][choosedPiece->getPos().y + 1] != "   ") {
+		checkPossibleMove(choosedPiece->getPos().x + (1 * converter), choosedPiece->getPos().y + 1);
+	}
 
 }
 
